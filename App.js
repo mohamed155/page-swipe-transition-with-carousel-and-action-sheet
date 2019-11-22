@@ -3,6 +3,7 @@ import {
   StyleSheet,
   ScrollView,
   View,
+  TouchableWithoutFeedback,
   Text,
   Dimensions,
   SafeAreaView
@@ -11,27 +12,41 @@ import Carousel from 'react-native-snap-carousel';
 
 class App extends Component {
 
+  constructor(props) {
+    super(props);
+    this.handleInnerPressIn = this.handleInnerPressIn.bind(this);
+    this.handleInnerPressOut = this.handleInnerPressOut.bind(this);
+  }
+
   state = {
     entries: [
       'slide 1',
       'slide 2',
       'slide 3',
       'slide 4',
-    ]
+    ],
+    outerScrollViewScrollEnabled: true
   };
+
+  handleInnerPressIn = () => this.setState({ outerScrollViewScrollEnabled: false });
+  handleInnerPressOut = () => this.setState({ outerScrollViewScrollEnabled: true });
 
   static _renderItem ({item, index}) {
     return (
-      <View style={styles.slide}>
-        <Text style={styles.title}>{ item }</Text>
-      </View>
+      <TouchableWithoutFeedback c>
+        <View style={styles.slide}>
+          <Text style={styles.title}>{ item }</Text>
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 
   render() {
+    const { outerScrollViewScrollEnabled } = this.state;
+
     return (
       <ScrollView pagingEnabled={true}>
-        <ScrollView horizontal={true} pagingEnabled={true}>
+        <ScrollView horizontal={true} pagingEnabled={true} scrollEnabled={outerScrollViewScrollEnabled}>
           <View style={[styles.page, {backgroundColor: 'pink'}]}>
             <View style={styles.titleBar}>
               <Text style={styles.title}>Screen 1</Text>
